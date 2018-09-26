@@ -1,28 +1,42 @@
 from django import forms
-from .models import Tag
+from .models import Tag, Post
 from django.core.exceptions import ValidationError
 
 
-class TagForm(forms.Form):
-    title = forms.CharField(label='Заголовок', max_length=50)
-    slug = forms.CharField(label='Slug', max_length=50)
+class TagForm(forms.ModelForm):
 
-    title.widget.attrs.update({'class': 'form-control'})
-    slug.widget.attrs.update({'class': 'form-control'})
+    class Meta:
+        model = Tag
+        fields = ['title']
+        widgets = {
+            'title': forms.TextInput(attrs={'class': 'form-control'}),
+        }
 
-    def clean_slug(self):
-        new_slug = self.cleaned_data['slug']
+    def clean_title(self):
+        new_title = self.cleaned_data['title']
 
-        # slug не может быть create так как по URL blog/tag/create будет форма
-        if new_slug == 'create':
-            raise ValidationError('Slug не может называться "create"')
-        if Tag.objects.filter(slug__iexact=new_slug).count():
-            raise ValidationError('Slug "{}" уже существует'.format(new_slug))
+        if Tag.objects.filter(title__iexact=new_title).count():
+            raise ValidationError('Заголовок тега "{}" уже существует...'.format(new_title))
+        return new_title
 
-        return new_slug
-    
 
-    def save(self):
-        new_tag = Tag.objects.create(title=self.cleaned_data['title'], slug=self.cleaned_data['slug'])
-        return new_tag
+class PostForm(forms.ModelForm):
+
+    class Meta:
+        model = Post
+        fields = ['title', 'body', 'tags']
+
+        widgets = {
+            'title': forms.TextInput(attrs={'class': 'form-control'}),
+            'body': forms.Textarea(attrs={'class': 'form-control'}),
+            'tags': forms.SelectMultiple(attrs={'class': 'form-control'}),
+        }
+
+    def clean_title(self):
+        new_title = self.cleaned_data['title']
+
+        if Post.objects.filter(title__iexact=new_title).count():
+            raise ValidationError('Заголовок поста "{}" уже существует...'.format(new_title))
+        return new_title
+
 

@@ -1,11 +1,14 @@
 from django.db import models
 from django.shortcuts import reverse
 
+from django.utils.text import slugify
+from time import time
+
 
 class Post(models.Model):
     """ Модель поста """
-    title = models.CharField(max_length=150, db_index=True)
-    slug = models.SlugField(max_length=150, unique=True)
+    title = models.CharField(verbose_name='Заголовок', max_length=150, db_index=True)
+    slug = models.SlugField(max_length=150, blank=True, unique=True)
     body = models.TextField(blank=True, db_index=True)
     pub_date = models.DateTimeField(auto_now_add=True)
     tags = models.ManyToManyField('Tag', blank=True, related_name='posts')
@@ -16,12 +19,17 @@ class Post(models.Model):
     def get_absolute_url(self):
         """ Возвращает абсолютный URL поста """
         return reverse('post_detail_url', kwargs={'slug': self.slug})
-    
+
+    def save(self, *args, **kwargs):
+        if not self.pk:
+            self.slug = '{}-{}'.format(slugify(self.title, allow_unicode=True), str(int(time())))
+        super().save(*args, **kwargs)
+
 
 class Tag(models.Model):
     """ Модель тега """
-    title = models.CharField(max_length=50)
-    slug = models.SlugField(max_length=50, unique=True)
+    title = models.CharField(verbose_name='Заголовок', max_length=50)
+    slug = models.SlugField(max_length=50, blank=True, unique=True)
 
     def __str__(self):
         return self.title
@@ -30,4 +38,9 @@ class Tag(models.Model):
         """ Возвращает абсолютный URL тега """
         return reverse('tag_detail_url', kwargs={'slug': self.slug})
 
+    def save(self, *args, **kwargs):
+        if not self.pk:
+            self.slug = '{}-{}'.format(slugify(self.title, allow_unicode=True), str(int(time())))
+        super().save(*args, **kwargs)
+    
 

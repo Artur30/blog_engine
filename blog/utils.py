@@ -1,4 +1,4 @@
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, get_object_or_404, redirect
 from .models import Post, Tag
 
 class ObjectDetailMixin:
@@ -10,3 +10,21 @@ class ObjectDetailMixin:
         return render(request, self.template, context={
             self.model.__name__.lower(): obj
         })
+
+
+class ObjectCreateMixin:
+    form = None
+    template = None
+
+    def get(self, request):
+        form = self.form()
+        return render(request, self.template, context={'form': form})
+    
+    def post(self, request):
+        form = self.form(request.POST)
+
+        if form.is_valid():
+            new_obj = form.save()
+            return redirect(new_obj)
+        return render(request, self.template, context={'form': form})
+
