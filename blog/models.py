@@ -11,7 +11,7 @@ class Post(models.Model):
     tags = models.ManyToManyField('Tag', blank=True, related_name='posts')
 
     def __str__(self):
-        return str(self.title)
+        return self.title
     
     def get_absolute_url(self):
         """ Возвращает абсолютный URL поста """
@@ -24,7 +24,7 @@ class Tag(models.Model):
     slug = models.SlugField(max_length=50, unique=True)
 
     def __str__(self):
-        return str(self.title)
+        return self.title
     
     def get_absolute_url(self):
         """ Возвращает абсолютный URL тега """
