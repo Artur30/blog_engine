@@ -12,13 +12,6 @@ class TagForm(forms.ModelForm):
             'title': forms.TextInput(attrs={'class': 'form-control'}),
         }
 
-    def clean_title(self):
-        new_title = self.cleaned_data['title']
-
-        if Tag.objects.filter(title__iexact=new_title).count():
-            raise ValidationError('Заголовок тега "{}" уже существует...'.format(new_title))
-        return new_title
-
 
 class PostForm(forms.ModelForm):
 
@@ -32,11 +25,5 @@ class PostForm(forms.ModelForm):
             'tags': forms.SelectMultiple(attrs={'class': 'form-control'}),
         }
 
-    def clean_title(self):
-        new_title = self.cleaned_data['title']
-
-        if Post.objects.filter(title__iexact=new_title).count():
-            raise ValidationError('Заголовок поста "{}" уже существует...'.format(new_title))
-        return new_title
 
 

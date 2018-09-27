@@ -1,13 +1,14 @@
-from django.shortcuts import render, get_object_or_404, redirect
+from django.shortcuts import render, get_object_or_404, redirect, reverse
 from .models import Post, Tag
 from django.views.generic import View
-from .utils import ObjectDetailMixin, ObjectCreateMixin
+from .utils import ObjectDetailMixin, ObjectCreateMixin, ObjectListMixin, ObjectUpdateMixin, ObjectDeleteMixin
 from .forms import TagForm, PostForm
 
 
-def posts_list(request):
-    posts = Post.objects.all()
-    return render(request, 'blog/index.html', context={'posts': posts})
+# Контроллеры постов
+class PostsList(ObjectListMixin, View):
+    model = Post
+    template = 'blog/index.html'
 
 
 class PostDetail(ObjectDetailMixin, View):
@@ -15,9 +16,28 @@ class PostDetail(ObjectDetailMixin, View):
     template = 'blog/post_detail.html'
 
 
-def tags_list(request):
-    tags = Tag.objects.all()
-    return render(request, 'blog/tags_list.html', context={'tags': tags})
+class PostCreate(ObjectCreateMixin, View):
+    form = PostForm
+    template = 'blog/post_create_form.html'
+
+
+class PostUpdate(ObjectUpdateMixin, View):
+    model = Post
+    form = PostForm
+    template = 'blog/post_update_form.html'
+
+
+class PostDelete(ObjectDeleteMixin, View):
+    model = Post
+    redirect_url = 'posts_list_url'
+    template = 'blog/post_delete_form.html'
+
+
+####################################################
+# Контроллеры тегов
+class TagsList(ObjectListMixin, View):
+    model = Tag
+    template = 'blog/tags_list.html'
 
 
 class TagDetail(ObjectDetailMixin, View):
@@ -30,8 +50,16 @@ class TagCreate(ObjectCreateMixin, View):
     template = 'blog/tag_create.html'
 
 
-class PostCreate(ObjectCreateMixin, View):
-    form = PostForm
-    template = 'blog/post_create_form.html'
+class TagUpdate(ObjectUpdateMixin, View):
+    model = Tag
+    form = TagForm
+    template = 'blog/tag_update_form.html'
+
+
+class TagDelete(ObjectDeleteMixin, View):
+    model = Tag
+    redirect_url = 'tags_list_url'
+    template = 'blog/tag_delete_form.html'
+
 
 

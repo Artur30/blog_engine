@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+
+{% block title %}
+    Удаление тега "{{ tag.title }}" - {{ block.super }}
+{% endblock title %}
+
+{% block content %}
+    <form action="{{ tag.get_delete_url }}" method="post">
+        {% csrf_token %}
+        
+        <h3>Вы уверены, что хотите удалить тег <b>"{{ tag.title }}"</b></h3>
+        
+        <div class="form-group">
+            <a href="{{ tag.get_absolute_url }}" class="badge badge-success">Отменить</a>
+        </div>
+        <button type="submit" class="btn btn-danger">Удалить</button>
+    </form>
+{% endblock content %}
+
