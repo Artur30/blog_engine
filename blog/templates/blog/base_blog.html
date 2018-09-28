@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+
+
+{% block admin-panel %}
+    <div class="btn-group-verical">
+        <button type="button" class="btn btn-primary dropdown-toggle btn-block" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            Создать
+        </button>
+        <div class="dropdown-menu">
+            <h6 class="dropdown-header">Создать пост или тег</h6>
+            <a class="dropdown-item" href="{% url 'post_create_url' %}">Пост</a>
+            <a class="dropdown-item" href="{% url 'tag_create_url' %}">Тег</a>
+        </div>
+        {% if detail %}
+            <a href="{{ admin_object.get_update_url }}" class="btn btn-primary">Редактировать</a>
+            <a href="{{ admin_object.get_delete_url }}" class="btn btn-danger">Удалить</a>
+        {% endif %}
+    </div>
+{% endblock admin-panel %}
+
+

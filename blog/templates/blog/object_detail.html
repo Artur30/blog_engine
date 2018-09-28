@@ -1,0 +1,23 @@
+{% extends "blog/base_blog.html" %}
+
+{% block title %}
+    {% if post %}
+        {{ post.title }} - {{ block.super }}
+    {% elif tag %}
+        {{ tag.title }} - {{ block.super }}
+    {% endif %}
+{% endblock %}
+
+{% block content %}
+    {% if post %}
+        <h1 class="mt-5">{{ post.title }}</h1>
+        <p>{{ post.body }}</p>
+    {% elif tag %}
+        <h1 class="mb-5">Посты с тегом "{{ tag.title }}":</h1>
+
+        {% for post in tag.posts.all %}
+            {% include "blog/includes/post_card_template.html" %}
+        {% endfor %}
+    {% endif %}
+{% endblock %}
+
