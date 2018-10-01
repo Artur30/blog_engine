@@ -1,9 +1,10 @@
-from django.urls import path
+from django.urls import path, include
 from blog import views
+from django.contrib.auth.views import LoginView
 
 
 urlpatterns = [
-    path('', views.PostsList.as_view(), name='posts_list_url'),
+    path('posts/page/<int:page_number>', views.PostsList.as_view(), name='posts_list_url'),
     path('post/create/', views.PostCreate.as_view(), name='post_create_url'),
     path('post/<str:slug>/update/', views.PostUpdate.as_view(), name='post_update_url'),
     path('post/<str:slug>/', views.PostDetail.as_view(), name='post_detail_url'),

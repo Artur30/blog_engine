@@ -32,6 +32,9 @@ class Post(models.Model):
         if not self.pk:
             self.slug = '{}-{}'.format(slugify(self.title, allow_unicode=True), str(int(time())))
         super().save(*args, **kwargs)
+    
+    class Meta:
+        ordering = ['-pub_date']
 
 
 class Tag(models.Model):
@@ -58,5 +61,8 @@ class Tag(models.Model):
         if not self.pk:
             self.slug = '{}-{}'.format(slugify(self.title, allow_unicode=True), str(int(time())))
         super().save(*args, **kwargs)
+    
+    class Meta:
+        ordering = ['title']
     
 

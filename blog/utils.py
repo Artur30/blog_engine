@@ -1,5 +1,7 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from .models import Post, Tag
+from django.core.paginator import Paginator
+
 
 class ObjectDetailMixin:
     model = None
@@ -29,17 +31,6 @@ class ObjectCreateMixin:
             new_obj = form.save()
             return redirect(new_obj)
         return render(request, self.template, context={'form': form})
-
-
-class ObjectListMixin:
-    model = None
-    template = None
-
-    def get(self, request):
-        obj = self.model.objects.all()
-        return render(request, self.template, context={
-            self.model.__name__.lower() + 's': obj,
-        })
 
 
 class ObjectUpdateMixin:
