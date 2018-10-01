@@ -10,23 +10,10 @@ from django.db.models import Q
 
 
 # Контроллеры постов
-def previous_next_url(page):
-    if page.has_previous():
-        previous_url = str(page.previous_page_number())
-    else:
-        previous_url = None
-    if page.has_next():
-        next_url = str(page.next_page_number())
-    else:
-        next_url = None
-
-    return previous_url, next_url
-
-
 class PostsList(View):
     """ Обрабатывает список постов """
 
-    def get(self, request, page_number):
+    def get(self, request, page_number=1):
         search_query = request.GET.get('search', '')
         if search_query:
             posts = Post.objects.filter(Q(title__icontains=search_query) | Q(body__icontains=search_query))
@@ -38,12 +25,8 @@ class PostsList(View):
 
         is_paginated = page.has_other_pages()
         
-        previous_url, next_url = previous_next_url(page)
-        
         return render(request, 'blog/index.html', context={
             'is_paginated': is_paginated,
-            'previous_url': previous_url,
-            'next_url': next_url,
             'page': page,
         })
 

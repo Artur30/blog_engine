@@ -19,7 +19,7 @@
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav mr-auto">
                 <li class="nav-item active">
-                    <a class="nav-link" href="{% url 'posts_list_url' page_number=1 %}">Посты</a>
+                    <a class="nav-link" href="{% url 'posts_list_url' %}">Посты</a>
                 </li>
                 <li class="nav-item active">
                     <a class="nav-link" href="{% url 'tags_list_url' %}">Теги</a>
@@ -50,26 +50,26 @@
                     <nav aria-label="...">
                         <ul class="pagination">
     
-                            <li class="page-item {% if not previous_url %} disabled {% endif %}">
-                                <a class="page-link" href="{{ previous_url }}" tabindex="-1">Назад</a>
+                            <li class="page-item {% if not page.has_previous %} disabled {% endif %}">
+                                <a class="page-link" href="{% url 'posts_list_page_url' page.number|add:-1 %}" tabindex="-1">Назад</a>
                             </li>
                             
                             {% for page_number in page.paginator.page_range %}
                                 {% if page.number == page_number %}
                                     <li class="page-item active">
-                                        <a class="page-link" href="{{ page_number }}">{{ page_number }}
+                                        <a class="page-link" href="{% url 'posts_list_page_url' page_number %}">{{ page_number }}
                                             <span class="sr-only">(current)</span>
                                         </a>
                                     </li>
                                 {% elif page.number > page.number|add:-3  and page.number < page.number|add:3 %}
                                     <li class="page-item">
-                                        <a class="page-link" href="{{ page_number }}">{{ page_number }}</a>
+                                        <a class="page-link" href="{% url 'posts_list_page_url' page_number %}">{{ page_number }}</a>
                                     </li>
                                 {% endif %}
                             {% endfor %}
     
-                            <li class="page-item {% if not next_url %} disabled {% endif %}">
-                                <a class="page-link" href="{{ next_url }}">Вперед</a>
+                            <li class="page-item {% if not page.has_next %} disabled {% endif %}">
+                                <a class="page-link" href="{% url 'posts_list_page_url' page.number|add:1 %}">Вперед</a>
                             </li>
                         </ul>
                     </nav>                

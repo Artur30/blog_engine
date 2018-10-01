@@ -20,7 +20,7 @@ class LoginView(View):
 
             if user is not None and user.is_active:
                 auth.login(request, user)
-                return redirect('posts_list_url', page_number=1)
+                return redirect('posts_list_url')
             else:
                 return render(request, 'account/login.html', context={'form': form})
 
@@ -28,7 +28,7 @@ class LoginView(View):
 class LogoutView(View):
     def get(self, request):
         auth.logout(request)
-        return redirect('posts_list_url', page_number=1)
+        return redirect('posts_list_url')
     
 
 class RegistrationView(View):
@@ -43,7 +43,7 @@ class RegistrationView(View):
             new_user = form.save(commit=False)
             new_user.set_password(form.cleaned_data['password_1'])
             new_user.save()
-            return redirect('posts_list_url', page_number=1)
+            return redirect('posts_list_url')
         else:
             return render(request, 'account/registration.html', context={'form': form})
     
